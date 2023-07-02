@@ -1,8 +1,6 @@
 firewall {
     all-ping enable
     broadcast-ping disable
-    group {
-    }
     ipv6-name WANv6_IN {
         default-action drop
         description "WAN inbound traffic forwarded to LAN"
@@ -45,7 +43,7 @@ firewall {
         rule 30 {
             action accept
             description "Allow IPv6 icmp"
-            protocol icmpv6
+            protocol ipv6-icmp
         }
         rule 40 {
             action accept
@@ -162,21 +160,33 @@ interfaces {
     ethernet eth1 {
         description Local
         duplex auto
+        poe {
+            output off
+        }
         speed auto
     }
     ethernet eth2 {
         description Local
         duplex auto
+        poe {
+            output off
+        }
         speed auto
     }
     ethernet eth3 {
         description Local
         duplex auto
+        poe {
+            output off
+        }
         speed auto
     }
     ethernet eth4 {
         description Local
         duplex auto
+        poe {
+            output off
+        }
         speed auto
     }
     ethernet eth5 {
@@ -220,12 +230,6 @@ interfaces {
         }
     }
 }
-port-forward {
-    auto-firewall enable
-    hairpin-nat disable
-    lan-interface switch0
-    wan-interface pppoe0
-}
 service {
     dhcp-server {
         disabled false
@@ -234,9 +238,7 @@ service {
             authoritative enable
             subnet 10.0.9.0/24 {
                 default-router 10.0.9.1
-                dns-server 10.0.9.142
                 dns-server 10.0.9.1
-                domain-name lan
                 lease 86400
                 start 10.0.9.38 {
                     stop 10.0.9.243
@@ -264,9 +266,6 @@ service {
             type masquerade
         }
     }
-    unms {
-        disable
-    }
 }
 system {
     analytics-handler {
@@ -285,6 +284,10 @@ system {
         server 3.ubnt.pool.ntp.org {
         }
     }
+    offload {
+        hwnat enable
+        ipsec enable
+    }
     syslog {
         global {
             facility all {
@@ -296,8 +299,4 @@ system {
         }
     }
     time-zone UTC
-    traffic-analysis {
-        dpi disable
-        export disable
-    }
 }
