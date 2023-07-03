@@ -7,7 +7,19 @@ firewall {
         enable-default-log
         rule 10 {
             action accept
-            description "Allow established/related sessions"
+            description "Allow established/related sessions - tcp"
+            log disable
+            protocol tcp
+            state {
+                established enable
+                related enable
+            }
+        }
+        rule 15 {
+            action accept
+            description "Allow established/related sessions - udp"
+            log disable
+            protocol udp
             state {
                 established enable
                 related enable
@@ -16,9 +28,17 @@ firewall {
         rule 20 {
             action drop
             description "Drop invalid state"
+            log enable
+            protocol all
             state {
                 invalid enable
             }
+        }
+        rule 30 {
+            action accept
+            description "Allow IPv6 icmp"
+            log disable
+            protocol icmpv6
         }
     }
     ipv6-name WANv6_LOCAL {
@@ -43,7 +63,7 @@ firewall {
         rule 30 {
             action accept
             description "Allow IPv6 icmp"
-            protocol ipv6-icmp
+            protocol icmpv6
         }
         rule 40 {
             action accept
