@@ -250,6 +250,14 @@ interfaces {
         }
     }
 }
+protocols {
+    static {
+        interface-route6 ::/0 {
+            next-hop-interface pppoe0 {
+            }
+        }
+    }
+}
 service {
     dhcp-server {
         disabled false
